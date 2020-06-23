@@ -1,0 +1,10 @@
+---
+    - hosts: all
+      become: yes
+      tasks:
+        - name: installing git
+          apt:
+                  pkg:
+                          - git
+                          - wget
+    
