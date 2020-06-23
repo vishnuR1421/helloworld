@@ -1,35 +1,64 @@
 #!/usr/bin/env groovy
+
+//def server = Artifactory.server 'myjfrog'
+
 pipeline {
-  agent any
-  tools {nodejs "latest"}
-  stages {
-    stage('SCM- Clone') {
-      steps {
-        git credentialsId: 'github', url: 'URL'
-      }
-    }    
-    stage('preflight') {
-      steps {
-        echo sh(returnStdout: true, script: 'env')
-        sh 'node -v'
-      }
-    }
-    stage('build') {
-      steps {
-        sh 'npm --version'
-        sh 'git log --reverse -1'
-        sh 'npm install'
-      }
-    }
-    stage('test') {
-      steps {
-        sh 'npm test'
-      }
-    }
-    stage('Deploy') {
-        steps {
-            sh 'ansible-playbook -i "${inventory_name}" playbook.yml' //playbook which will deploy to the target machines
+  agent { label: "slave-label"}
+    stages {
+        stage('SCM Git clone') {
+            steps {
+               git credentialsId: 'github', url: 'https://github.com/tejesh555/helloworld.git'
+            }       
+        }
+
+        stage('BUILD') {
+            steps {
+                script {
+                    sh 'mvn clean install'
+                }
+            }
+        }
+
+        stage("test") {
+            steps {
+                script {
+                    sh """
+                           echo 'sh "unit_test_cases"'
+                }
+            }
+        }
+
+        stage ('publish - jfrog') {
+            steps {
+                script {
+
+                    rtUpload (
+                        serverId: 'myjfrog',
+                        spec: '''{
+                              "files": [
+                                {
+                                  "pattern": "target/*.jar",
+                                  "target": "helloworld/"
+                                }
+                             ]
+                        } '''
+                    )
+                    
+                }
+            }
+        }
+
+        stage ('deploy') {
+            steps{ 
+                script {
+                    sh 'echo "ansibleAhoc-command"'
+                }
+            }
         }
     }
-  }
+    post {
+        always {
+         emailext body: 'this is status of job "${BUILD_URL}"', subject: 'Job Status', to: 'tejesh2311@gmail.com'   
+        }
+    }
 }
