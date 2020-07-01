@@ -1,0 +1,25 @@
+---
+    - hosts: all
+      become: yes
+      vars:
+              our_name: saturday
+      tasks:
+        - name: install java in Ubuntu
+          apt:
+            name: "{{java_ubuntu}}"
+            state: present
+          when: ansible_os_family == "Debian"
+        - name: install java in RHEL
+          yum:
+            name: "{{java_rhel}}"
+            state: present
+          when: ansible_os_family == "RedHat"
+        - name: print in ubuntu
+          debug:
+                msg: "{{our_name}}"
+          when: ansible_os_family == "Debian"
+        - name: print in rhel
+          debug:
+                msg: "{{our_name}}"
+          when: ansible_os_family == "RedHat"
+    

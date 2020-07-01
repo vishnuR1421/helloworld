@@ -1,0 +1,15 @@
+[ubuntu]
+172.31.54.33
+[rhel]
+172.31.35.66
+
+[all:children]
+ubuntu
+rhel
+
+
+[ubuntu:vars]
+java_ubuntu=openjdk-8-jdk
+
+[rhel:vars]
+java_rhel=java-1.8.0-openjdk

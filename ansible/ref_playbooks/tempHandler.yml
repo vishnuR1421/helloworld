@@ -1,0 +1,24 @@
+---
+- hosts: ubuntu
+  become: yes
+  vars:
+    deb: apache2
+  tasks:
+    - apt:
+        name: "{{deb}}"
+        state: latest
+      notify:
+        - test
+    - template:
+        src: ./myindex.j2
+        dest: /var/www/html/index.html
+      notify:
+        - restart the webserver
+  handlers:
+    - name: restart the webserver
+      service: 
+        name: apache2
+        state: restarted
+    - name: test
+      debug:
+        msg: this is test

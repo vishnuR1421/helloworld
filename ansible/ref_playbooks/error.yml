@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: test for a fail case
+      debug:
+        msg: "{{git_branch}}"
+      register: myoutput
+      failed_when: "'master' in myoutput.stderr"
+      when: prod_push == no

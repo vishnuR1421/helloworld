@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: installing in ubuntu
+    apt:
+              pkg:
+                      - git
+                      - wget
+                      - tree
+    when: ansible_os_family == "Debian"
+  - name: installing in RHEL
+    yum:
+              name: "{{item}}"
+              state: latest
+    with_items:          
+        - git
+        - wget 
+        - tree
+    when: ansible_os_family == "Redhat"
