@@ -1,0 +1,24 @@
+---
+- name: install apache2
+  apt:
+    name: apache2
+    state: latest
+  when: ansible_os_family == "Debian"
+
+- name: install httpd
+  yum:
+    name: httpd
+    state: latest
+  when: ansible_os_family == "RedHat"
+
+- name:  retart apache2
+  service:
+    name: apache2
+    state: restarted
+  when: ansible_os_family == "Debian"
+
+- name: restart httpd
+  service:
+    name: httpd
+    state: restarted
+  when: ansible_os_family == "RedHat"

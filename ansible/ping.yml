@@ -1,5 +1,0 @@
----
-    - hosts: all #target machine
-      tasks:
-        - ping:
-    
