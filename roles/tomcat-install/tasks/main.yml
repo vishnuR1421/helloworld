@@ -1,0 +1,36 @@
+- name: Create Tomcat User
+  command: sudo useradd -r -m -U -d /opt/tomcat -s /bin/false tomcat
+  ignore_errors: yes
+
+- name: download tar file
+  get_url:
+    url: https://mirrors.estointernet.in/apache/tomcat/tomcat-9/v9.0.36/bin/apache-tomcat-9.0.36.tar.gz
+    dest: /tmp
+  ignore_errors: yes
+
+- name: untar the package
+  unarchive:
+    src: /tmp/apache-tomcat-9.0.36.tar.gz
+    dest: /opt/tomcat 
+    extra_opts: [--strip-components=1]
+
+- name: Change the ownership to tomcat
+  file:
+    path: /opt/tomcat
+    group: tomcat
+    owner: tomcat
+    state: directory
+    recurse: yes
+
+- name: copy template to create systemd service
+  template:
+    src: templates/systemd.j2
+    dest: /etc/systemd/system/tomcat.service
+
+- name: reload demon 
+  command: sudo systemctl daemon-reload
+
+- name: start tomcat
+  service: 
+    name: tomcat
+    state: restarted

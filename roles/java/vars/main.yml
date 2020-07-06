@@ -1,0 +1,3 @@
+---
+java_ubuntu: openjdk-11-jdk
+java_rhel: java-1.8.0-openjdk

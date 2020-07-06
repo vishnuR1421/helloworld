@@ -1,0 +1,11 @@
+---
+- name: install java in Ubuntu
+  apt:
+    name: "{{java_ubuntu}}"
+    state: present
+  when: ansible_os_family == "Debian"
+- name: install java in RHEL
+  yum:
+    name: "{{java_rhel}}"
+    state: present
+  when: ansible_os_family == "RedHat"

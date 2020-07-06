@@ -1,0 +1,6 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    - {role: java}
+    - {role: webserver}

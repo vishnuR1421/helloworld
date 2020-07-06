@@ -1,0 +1,7 @@
+---
+- name: deploy artifact
+  copy:
+     src: helloworld/target/helloworld-1.0.jar
+     dest: /opt/tomcat/webapps
+  notify:
+    - restart tomcat
