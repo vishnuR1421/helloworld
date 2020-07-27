@@ -3,7 +3,22 @@ pipeline{
     tools {
         maven 'maven3'
     }
+
     stages{
+ 	stage ("git clone") {
+	    steps {
+		git credentialsId: 'github', url: 'https://github.com/tejesh555/helloworld.git'
+	    }    
+	}
+
+	stage ("checkout") {
+	    steps {
+		script {
+		    sh """ 
+			git checkout "${branch}" """
+		}
+	    }
+	}
         stage('Maven Build'){
             steps{
                 sh "mvn clean package"
