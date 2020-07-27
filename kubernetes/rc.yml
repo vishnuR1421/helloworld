@@ -8,9 +8,9 @@ spec:
         app: mypod
     template:
         metadata:
-            name: nginxpod
-            label:
-                    app:mypod
+              name: nginxpod
+              labels:
+                      app:mypod
         spec:
             containers:
                 - name: mynginx
