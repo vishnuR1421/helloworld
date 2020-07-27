@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 - name: Create Tomcat User
   command: sudo useradd -r -m -U -d /opt/tomcat -s /bin/false tomcat
   ignore_errors: yes
@@ -35,11 +34,3 @@
   service: 
     name: tomcat
     state: restarted
-=======
----
-- hosts: all
-  become: yes
-  roles:
-    - {role: java}
-    - {role: webserver}
->>>>>>> c0a323fae974538af616cfbcfc392830297fabb9
