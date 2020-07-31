@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mydeployment
+    labels: 
+        deploy: nginxdeply
+spec:
+    strategy: RollingUpdate
+    rollingUpdate:
+        maxSurge: 2
+        maxUnavailable: 0
+    replicas: 3
+    selector:
+        app: nginxpod
+    template:
+        metadata:
+            name: nginx-pod
+            labels: 
+                app: nginxpod
+        spec:
+            containers:
+                - name: nginx-container
+                  image: nginx
+                  ports:
+                    - containerPort: 80        
