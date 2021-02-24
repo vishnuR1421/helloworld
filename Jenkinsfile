@@ -1,43 +1,60 @@
-
 pipeline {
-    agent any
+    agent {label "test_label"} 
+    tools {maven "mymvn"}
     stages {
-        stage ("git clone") {
+        stage("git clone") {
             steps {
-                git credentialsId: 'github', url: 'https://github.com/tejesh555/helloworld.git'
-            }    
+                git credentialsId: 'tejesh-github', url: 'https://github.com/tejesh555/${project_name}.git'
+            }
         }
 
-        stage ("checkout") {
+        stage ("build") {
+            steps {
+                sh """
+                    mvn clean install
+                    echo 'this is for'
+                    echo 'multiple lines'
+                    """
+            }
+        }
+
+        stage ("test") {
             steps {
                 script {
-                    sh """ 
-                        git checkout "${branch}" """
+                    sh 'echo "this is testing"'
                 }
             }
         }
 
-        stage ("Build") {
+        stage ('publish') {
             steps {
-                script {
-                   sh  "mvn clean install"
-                }
-            }
+                rtUpload (
+                    serverId: "myjfrog",
+                    spec: '''{
+                        "files": [
+                            {
+                            "pattern": "target/*.jar",
+                            "target": "skr-login/"
+                            }
+                        ]
+                    }''',
+                    buildName: "${JOB_NAME}",
+                    buildNumber: "${BUILD_NUMBER}"
+                )
+            }  
         }
 
-        stage ("CD") {
+        stage ('deploy') {
             steps {
-                script {
-                    sh ""
-                    //sh "ansible-playbook -i {{inventory_name}} playbook"
-                }
-            }
-        }
-        
-        stage ("notify") {
-            steps {
-                emailext body: 'this is status of job "${BUILD_URL}"', subject: 'Job Status', to: 'tejesh2311@gmail.com'
+                sh 'echo "ansible -i hosts_file playbook.yml"'
             }
         }
     }
+    
+    post {
+        always {
+            emailext body: 'this is status of job "${BUILD_URL}"', subject: 'Job Status', to: 'tejesh2311@gmail.com'
+        }
+    }
+      
 }
