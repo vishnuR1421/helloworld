@@ -1,10 +1,12 @@
+def app_name = "${project_name}"
+
 pipeline {
     agent {label "test_label"} 
     tools {maven "mymvn"}
     stages {
         stage("git clone") {
             steps {
-                git credentialsId: 'tejesh-github', url: 'https://github.com/tejesh555/${project_name}.git'
+                git credentialsId: 'tejesh-github', url: "https://github.com/tejesh555/${app_name}.git"
             }
         }
 
