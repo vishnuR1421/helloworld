@@ -7,3 +7,7 @@ RUN cd /tmp && tar xvfz tomcat.tar.gz && cp -Rv /tmp/apache-tomcat-9.0.44/* /usr
 COPY ./SKRLogin-1.0.war /usr/local/tomcat/webapps/
 EXPOSE 8080
 CMD ["/usr/local/tomcat/bin/catalina.sh", "run"]
+
+# build the image:  docker build -t skr:1 .
+# run the image : docker run --name skr -p -d 8080:8080 skr:1
+# access it by : <ip>:8080
