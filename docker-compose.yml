@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+   web:
+            image: nginx
+            ports:
+               - 80-85:80
+
+            links:
+               - db
+   db:
+           image: mysql
+           command: --default-authentication-plugin=mysql_native_password
+           restart: always
+           environment:
+                   MYSQL_ROOT_PASSWORD: example
